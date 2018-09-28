@@ -2,7 +2,7 @@
 title: "ST 590 Project 1"
 author: "Amanda, adil & Brian"
 date: "September 28, 2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
