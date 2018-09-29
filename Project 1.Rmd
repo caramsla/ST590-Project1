@@ -115,3 +115,20 @@ orderTB_copy$Season <- factor(Season)
 ```
 
 ## Aggregation summary
+
+Using the Order date and the newly created season varible to aggregate some data.
+Mean and Median by Year
+standard deviation by season
+
+```{r Summaries}
+
+sumOrderData <- orderTB_copy %>% group_by(year(O_ORDERDATE)) %>% summarize(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
+sumOrderData
+
+tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
+
+```
+
+
+
+
