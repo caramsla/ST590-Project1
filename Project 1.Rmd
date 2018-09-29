@@ -108,6 +108,7 @@ Create a variable to indicate which season the order was made. Use definition of
 
 m <- month(orderTB_copy$O_ORDERDATE)
 
+
 # Use ifelse for vectorized operation
 Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", ifelse(m >= 9 & m <= 11, "Autumn", "Winter")))
 orderTB_copy$Season <- factor(Season)
@@ -115,3 +116,17 @@ orderTB_copy$Season <- factor(Season)
 ```
 
 ## Aggregation summary
+```{r}
+#I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority?
+table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
+table(orderTB_copy$O_ORDERSTATUS, orderTB_copy$Season )
+
+#we could use this a bar plot, I need to add something here to make it a side by side bar plot. I need to polish it up too, I'm just trying to get ideas on what this data is/shows right now.
+
+g<-ggplot(orderTB_copy, aes(x= Season))
+
+g + geom_bar()
+
+#We need a side by side box plot and scatter plots with coloring.
+```
+
