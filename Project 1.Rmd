@@ -13,8 +13,8 @@ Extensible Markup Language, or XML, is a dynamic language that is similar to, bu
 XML is self-defining, meaning the structure of data is embedded within the data itself.<br>
 This feature removes the need to pre-build the structure to store the data when attempting to share it.  
 The main advantage of XML is its simplicity.<br>
-It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the 
-	You can learn more about XML here:
+It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the rendering of such data in the website environment.<br>
+You can learn more about XML here:
 [link](https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language)<br>
 [link](https://www.w3schools.com/xml/xml_whatis.asp)<br>
 [link](https://www.sitepoint.com/really-good-introduction-xml/)<br>
@@ -22,10 +22,10 @@ It enables you to consolidate large chunks of information into an XML document w
 ## Where does it get used? 
 XML is useful in data transfer.<br>
 Attempting to share or exchange data in incompatible formats is time consuming at best.<br>
-As XML stores data in a plain text format it is a platform independent way of storing and transporting data.
+As XML stores data in a plain text format, it is a platform independent way of storing and transporting data.
 
 ## Why is it a good way to store data?
-XML is a good way to store complex and highly variable data, hierarchical data,  and data in which the the format may change over time. 
+XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time. 
 
 ## Loading libraries
 ```{r, warning = FALSE, message = FALSE}
@@ -59,7 +59,6 @@ orderParse
 ```
 
 ## Transforming XML into a dataframe
-
 ```{r xmlToDF}
 
 # xmlInList <- xmlToList(mondialParse)
@@ -71,9 +70,37 @@ orderParse
 
 xmlInList <- xmlToList(orderParse)
 orderDF <- ldply(xmlInList, data.frame)
-orderDF
+orderTB <- tbl_df(orderDF)
+str(orderTB)
 
 ```
+The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/
+
+## Data Wrangling
+All columns of data are parsed into factors, so we need to convert them to characters or numeric before manipulating them.
+```{r}
+# Make a copy so that orderTB is intact
+orderTB_copy <- orderTB
+
+# start converting columns
+orderTB_copy$O_TOTALPRICE <- as.numeric(levels(orderTB$O_TOTALPRICE))[orderTB$O_TOTALPRICE]
+orderTB_copy$O_ORDERDATE <- as.character(levels(orderTB$O_ORDERDATE))[orderTB$O_ORDERDATE]
+
+# If f is a factor, as.numeric(levels(f))[f] is more efficient than as.numeric(as.character(f)) according to R documentation. That is what we used above.
+
+# Convert order date from string to date type
+d <- orderTB$O_ORDERDATE
+parsedDate <- as.Date(d,"%Y-%m-%d")
+
+# Check if date conversion is successful
+class(parsedDate)
+
+orderTB_copy$O_ORDERDATE <- parsedDate
+
+str(orderTB_copy)
+
+```
+
 
 ## Variable Creation
 
