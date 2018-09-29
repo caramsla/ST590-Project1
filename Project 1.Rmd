@@ -1,28 +1,27 @@
 ---
-title: "ST 590 Project 1"
+title: "Project 1 Order Data Analysis"
 author: "Amanda, adil & Brian"
-date: "September 28, 2018"
-output: github_document
+date: "September 29, 2018"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 ## What is XML?
 Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br> 
-XML is self-defining, meaning the structure of data is embedded within the data itself.<br>
-This feature removes the need to pre-build the structure to store the data when attempting to share it.  
-The main advantage of XML is its simplicity.<br>
-It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the rendering of such data in the website environment.<br>
-You can learn more about XML here: <br> 
-<https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language> 
-<https://www.w3schools.com/xml/xml_whatis.asp> <br>
-<https://www.sitepoint.com/really-good-introduction-xml/> <br>
+
+XML is self-defining, meaning the structure of data is embedded within the data itself. This feature removes the need to pre-build the structure to store the data when attempting to share it.<br>
+
+The main advantage of XML is its simplicity. It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information. This feature facilitates the rendering of such data in the website environment.<br>
+
+You can learn more about XML here:<br>
+<https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language>,<br>
+<https://www.w3schools.com/xml/xml_whatis.asp><br>
+<https://www.sitepoint.com/really-good-introduction-xml/><br>
 
 ## Where does it get used? 
-XML is useful in data transfer.<br>
-Attempting to share or exchange data in incompatible formats is time consuming at best.<br>
-As XML stores data in a plain text format, it is a platform independent way of storing and transporting data.
+XML is useful in data transfer. Attempting to share or exchange data in incompatible formats is time consuming at best. As XML stores data in a plain text format, it is a platform independent way of storing and transporting data.
 
 ## Why is it a good way to store data?
 XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time. 
@@ -42,9 +41,9 @@ library(lubridate)
 
 ## Reading in XML data
 
-We found a website with many public xml datasets, some of them contain very interesting information.<br> (http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)
-Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources.<br>
-The data is made public and able to download from washington.edu datasets repository online.
+We found a website with many public xml datasets, some of them contain very interesting information.<br>
+[XML data repository](http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)<br>
+Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources. The data is made public and able to download from washington.edu datasets repository online.<br>
 
 Adil / Amanda, the XML dataset of Mondial has inconsistent number of nodes and/or subnodes throughout the XML content structure. It seems that we can't use standard protocols to fix those. We need to some ad hoc commands to make that work. Since this is for practice anyway, I suggest switching to another easier dataset called orders from the same repository, which I had success transforming it into XML. See code below. I commneted out the lines for Mondial in case we stil want to challenge ourselves later.
 
@@ -56,7 +55,7 @@ Adil / Amanda, the XML dataset of Mondial has inconsistent number of nodes and/o
 
 orderParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/tpc-h/orders.xml")
 class(orderParse)
-orderParse
+
 ```
 
 ## Transforming XML into a dataframe
@@ -75,11 +74,12 @@ orderTB <- tbl_df(orderDF)
 str(orderTB)
 
 ```
-The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/
+The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> 
+<https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/><br>
 
 ## Data Wrangling
 All columns of data are parsed into factors, so we need to convert them to characters or numeric before manipulating them.
-```{r data conversion}
+```{r data_conversion}
 # Make a copy so that orderTB is intact
 orderTB_copy <- orderTB
 
@@ -104,7 +104,7 @@ str(orderTB_copy)
 
 ## Variable Creation
 Create a variable to indicate which season the order was made. Use definition of seasons from northern hemisphere.
-```{r}
+```{r variable_creation}
 
 m <- month(orderTB_copy$O_ORDERDATE)
 
