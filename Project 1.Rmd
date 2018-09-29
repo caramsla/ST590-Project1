@@ -35,6 +35,8 @@ library(XML)
 library(methods)
 library(plyr)
 library(dplyr)
+if (!require(lubridate)) {install.packages("lubridate")}
+library(lubridate)
 ```
 
 
@@ -78,7 +80,7 @@ The 2 quantitative variables are total price and the full order date. The 2 cate
 
 ## Data Wrangling
 All columns of data are parsed into factors, so we need to convert them to characters or numeric before manipulating them.
-```{r}
+```{r data conversion}
 # Make a copy so that orderTB is intact
 orderTB_copy <- orderTB
 
@@ -101,7 +103,16 @@ str(orderTB_copy)
 
 ```
 
-
 ## Variable Creation
+Create a variable to indicate which season the order was made. Use definition of seasons from northern hemisphere.
+```{r}
+
+m <- month(orderTB_copy$O_ORDERDATE)
+
+# Use ifelse for vectorized operation
+Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", ifelse(m >= 9 & m <= 11, "Autumn", "Winter")))
+orderTB_copy$Season <- factor(Season)
+
+```
 
 ## Aggregation summary
