@@ -111,7 +111,16 @@ m <- month(orderTB_copy$O_ORDERDATE)
 # Use ifelse for vectorized operation
 Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", ifelse(m >= 9 & m <= 11, "Autumn", "Winter")))
 orderTB_copy$Season <- factor(Season)
+orderTB_copy$Year <- year(orderTB_copy$O_ORDERDATE)
 
 ```
 
 ## Aggregation summary
+```{r}
+
+# Since plyr and dplyr are called together, we must use dplyr::group_by and dplyr::summarise. Otherwise, only a one line summary will be returned. Very important to notice!
+
+order_summary <- orderTB_copy %>% dplyr::group_by(Year) %>% dplyr::summarise(averagePrice = mean(O_TOTALPRICE, na.rm = TRUE), minPrice = min(O_TOTALPRICE, na.rm = TRUE), maxPrice = max(O_TOTALPRICE, na.rm = TRUE), PriceSD = sd(O_TOTALPRICE, na.rm = TRUE))
+order_summary
+```
+
