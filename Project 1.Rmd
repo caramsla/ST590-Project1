@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Loading libraries
-Test pushing Rmarkdown file. Content to be filled in. 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
 #requiring more packages that will be helpful later to handle XML data
@@ -22,23 +21,26 @@ library(dplyr)
 
 ## Reading in XML data
 
-I found a website with many public xml datasets, some of them contain  very ineteresting information. (http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)
-Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources.
+We found a website with many public xml datasets, some of them contain very ineteresting information.<br> (http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)
+Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources.<br>
 The data is made public and able to download from washington.edu datasets repository online.
-I was able to parsethe XML data - see code below but I'mstill trying to get the data into a DF.
 
 ```{r Mondial}
+
 mondialParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml")
 class(mondialParse) # Testing to make sure that R recognizes the XML data
 
 ```
-```{r MondialDF}
-#commenting this code for now until we figure out how to get XML into a DF 
-#mondialDF <- xmlToDataFrame(mondialParse)
+
+## Transforming XML into a dataframe
+
+```{r xmlToDF}
+
+monialDF <- ldply(xmlToList("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml"), data.frame)
+view(mondialDF) # Tried the code above but result in an error: arguments imply differing number of rows: 1, 4, 2, 14
 
 ```
 
-## Data wrangling
 
 ## Variable Creation
 
