@@ -8,6 +8,20 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+##What is XML?
+  Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.   XML is self-defining, meaning the structure of data is embedded within the data itself.  This feature removes the need to pre-build the structure to store the data when attempting to share it.  
+The main advantage of XML is it’s simplicity.  It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the 
+	You can learn more about XML here:
+[link](https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language)
+[link](https://www.w3schools.com/xml/xml_whatis.asp)
+[link](https://www.sitepoint.com/really-good-introduction-xml/)
+
+##Where does it get used? 
+XML is useful in data transfer.  Attempting to share or exchange data in incompatible formats is time consuming at best.  As XML stores data in a plain text format it is a platform independent way of storing and transporting data
+
+
+##Why is it a good way to store data?
+XML is a good way to store complex and highly variable data, hierarchical data,  and data in which the the format may change over time. 
 
 ## Loading libraries
 ```{r, warning = FALSE, message = FALSE}
