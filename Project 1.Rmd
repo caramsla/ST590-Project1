@@ -8,19 +8,23 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-##What is XML?
-  Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.   XML is self-defining, meaning the structure of data is embedded within the data itself.  This feature removes the need to pre-build the structure to store the data when attempting to share it.  
-The main advantage of XML is it’s simplicity.  It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the 
+## What is XML?
+Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br> 
+XML is self-defining, meaning the structure of data is embedded within the data itself.<br>
+This feature removes the need to pre-build the structure to store the data when attempting to share it.  
+The main advantage of XML is its simplicity.<br>
+It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the 
 	You can learn more about XML here:
-[link](https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language)
-[link](https://www.w3schools.com/xml/xml_whatis.asp)
-[link](https://www.sitepoint.com/really-good-introduction-xml/)
+[link](https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language)<br>
+[link](https://www.w3schools.com/xml/xml_whatis.asp)<br>
+[link](https://www.sitepoint.com/really-good-introduction-xml/)<br>
 
-##Where does it get used? 
-XML is useful in data transfer.  Attempting to share or exchange data in incompatible formats is time consuming at best.  As XML stores data in a plain text format it is a platform independent way of storing and transporting data
+## Where does it get used? 
+XML is useful in data transfer.<br>
+Attempting to share or exchange data in incompatible formats is time consuming at best.<br>
+As XML stores data in a plain text format it is a platform independent way of storing and transporting data.
 
-
-##Why is it a good way to store data?
+## Why is it a good way to store data?
 XML is a good way to store complex and highly variable data, hierarchical data,  and data in which the the format may change over time. 
 
 ## Loading libraries
@@ -28,6 +32,7 @@ XML is a good way to store complex and highly variable data, hierarchical data, 
 library(tidyverse)
 #requiring more packages that will be helpful later to handle XML data
 library(XML)
+library(methods)
 library(plyr)
 library(dplyr)
 ```
@@ -35,14 +40,21 @@ library(dplyr)
 
 ## Reading in XML data
 
-We found a website with many public xml datasets, some of them contain very ineteresting information.<br> (http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)
+We found a website with many public xml datasets, some of them contain very interesting information.<br> (http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)
 Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources.<br>
 The data is made public and able to download from washington.edu datasets repository online.
 
+Adil / Amanda, the XML dataset of Mondial has inconsistent number of nodes and/or subnodes throughout the XML content structure. It seems that we can't use standard protocols to fix those. We need to some ad hoc commands to make that work. Since this is for practice anyway, I suggest switching to another easier dataset called orders from the same repository, which I had success transforming it into XML. See code below. I commneted out the lines for Mondial in case we stil want to challenge ourselves later.
+
 ```{r Mondial}
 
-mondialParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml")
-class(mondialParse) # Testing to make sure that R recognizes the XML data
+# mondialParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml", useInternalNodes = TRUE)
+# class(mondialParse)
+# mondialParse
+
+orderParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/tpc-h/orders.xml")
+class(orderParse)
+orderParse
 
 ```
 
@@ -50,11 +62,18 @@ class(mondialParse) # Testing to make sure that R recognizes the XML data
 
 ```{r xmlToDF}
 
-monialDF <- ldply(xmlToList("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml"), data.frame)
-view(mondialDF) # Tried the code above but result in an error: arguments imply differing number of rows: 1, 4, 2, 14
+# xmlInList <- xmlToList(mondialParse)
+# monialDF <- ldply(xmlInList, data.frame)
+# Can't use the above methodology because number of nodes and subnodes are not consistent throughout the entire XML structure.
+
+# monialDF <- xmlToDataFrame("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml")
+# This does not work either.
+
+xmlInList <- xmlToList(orderParse)
+orderDF <- ldply(xmlInList, data.frame)
+orderDF
 
 ```
-
 
 ## Variable Creation
 
