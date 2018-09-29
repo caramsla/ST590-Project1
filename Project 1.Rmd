@@ -14,10 +14,10 @@ XML is self-defining, meaning the structure of data is embedded within the data 
 This feature removes the need to pre-build the structure to store the data when attempting to share it.  
 The main advantage of XML is its simplicity.<br>
 It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information.  This feature facilitates the rendering of such data in the website environment.<br>
-You can learn more about XML here:
-[link](https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language)<br>
-[link](https://www.w3schools.com/xml/xml_whatis.asp)<br>
-[link](https://www.sitepoint.com/really-good-introduction-xml/)<br>
+You can learn more about XML here: <br> 
+<https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language> 
+<https://www.w3schools.com/xml/xml_whatis.asp> <br>
+<https://www.sitepoint.com/really-good-introduction-xml/> <br>
 
 ## Where does it get used? 
 XML is useful in data transfer.<br>
@@ -57,7 +57,6 @@ Adil / Amanda, the XML dataset of Mondial has inconsistent number of nodes and/o
 orderParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/tpc-h/orders.xml")
 class(orderParse)
 orderParse
-
 ```
 
 ## Transforming XML into a dataframe
