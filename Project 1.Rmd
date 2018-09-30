@@ -168,6 +168,19 @@ g + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x =
 
 
 ```
+A function that finds a customer and how much they have spent and what years they were customers
+```{r}
+
+##I need to add some logic and verbage when an invalid customer ID is entered
+getTotalperCust<-function(df, variable){
+  
+  tot<- df %>% filter(O_CUSTKEY == variable) %>% dplyr::summarise(totPercust = sum(O_TOTALPRICE))
+  minyear<- df %>% filter(O_CUSTKEY == variable) %>% summarise(miny<-min(Year))
+  maxyear<- df %>% filter(O_CUSTKEY == variable) %>% summarise(maxy<-max(Year))
+  
+  return(list(TotalMoneySpent = paste("Customer", variable, "has spent", tot, "between", minyear, "and", maxyear, ".")))
+}
+```
 
 =======
 >>>>>>> 8aac0ee1e3209d3e64603f07bfe42b06d2df5ce7
