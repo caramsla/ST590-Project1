@@ -153,8 +153,10 @@ bar2 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(
 ```{r Scatter}
 scatter <- ggplot(orderTB_copy, aes(x = O_ORDERDATE, y = O_TOTALPRICE)) 
 scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 1992 - 1998", color = "Seasons")
+
+#This plot is too dense to gain valuable insight.  We will try a line plot with a summary measure to see if we can more easily identify trends.
 ```
-The above plot is too crowded to see the pattern. Do a line plot using summary data instead.
+
 
 ```{r Line}
 l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
@@ -166,9 +168,13 @@ l + geom_line(lwd = 1.2) + labs(x = "Year", y = "Average Order Price", title = "
 b1 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
 b1
 ```
+
 ```{r Box2}
-b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
+b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season") + facet_wrap(~Year, ncol = 3, scale = "free")
 b2
+
+# I added a facet wrap.  I don't think it helped the graph be any less busy.  Try it both ways and see what we like?! - Mandy
+# B: I think box plots are not that crowded and puting them together enables user to see them holistically and compare year to year. I am fine with either ways.
 ```
 
 #### Frequency count tables for other categorical variables
