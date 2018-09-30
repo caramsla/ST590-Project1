@@ -12,9 +12,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
-#XML <br>
+#XML: What is is and why should we use it? <br>
 
-## What is XML?
+#### What is XML?
 Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br> 
 
 XML is self-defining, meaning the structure of data is embedded within the data itself. This feature removes the need to pre-build the structure to store the data when attempting to share it.<br>
@@ -26,16 +26,19 @@ You can learn more about XML here:<br>
 <https://www.w3schools.com/xml/xml_whatis.asp><br>
 <https://www.sitepoint.com/really-good-introduction-xml/><br>
 
-## Where does it get used? 
+#### Where does it get used? 
 XML is useful in data transfer. Attempting to share or exchange data in incompatible formats is time consuming at best. As XML stores data in a plain text format, it is a platform independent way of storing and transporting data.
 
-## Why is it a good way to store data?
+#### Why is it a good way to store data?
 XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time. 
 
-## What package(s) should be used to read in XML data?
+# Package to read in XML data
+####What package(s) should be used to read in XML data?
 There are several ways and packages that could be used to read in XML data.  The 'XML' package has many online tutorials, help, and trouble shooting available.  This, along with the fact that it contains many functions that make it easy to access and convert your data make it our recommendation on reading in XML data.
 
-## Loading libraries
+# Reading in data and performing some sample analysis
+
+#### Loading libraries
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
 #requiring more packages that will be helpful later to handle XML data
@@ -48,7 +51,7 @@ library(lubridate)
 ```
 
 
-## Reading in XML Data
+#### Reading in XML Data
 
 We found a website with many public XML datasets, some of them contain very interesting information.<br>
 [XML data repository](http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)<br>
@@ -65,7 +68,7 @@ orderParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/x
 class(orderParse)
 ```
 
-## Transforming XML into a Dataframe
+#### Transforming XML into a Dataframe
 ```{r xmlToDF}
 # xmlInList <- xmlToList(mondialParse)
 # monialDF <- ldply(xmlInList, data.frame)
@@ -82,7 +85,7 @@ str(orderTB)
 The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> 
 <https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/><br>
 
-## Data Wrangling
+#### Data Wrangling
 All columns of data are parsed into factors, so we need to convert them to characters or numeric before manipulating them.
 ```{r Conversions}
 # Remove the last attr row (with NAs) from XML and make a copy so that orderTB is intact
@@ -107,7 +110,7 @@ orderTB_copy$O_ORDERDATE <- parsedDate
 str(orderTB_copy)
 ```
 
-## Variable Creation
+#### Variable Creation
 Create a variable to indicate which season the order was made. Use definition of seasons from northern hemisphere.
 ```{r Creation}
 
@@ -123,7 +126,7 @@ orderTB_copy$Year <- as.integer(year(orderTB_copy$O_ORDERDATE))
 
 ```
 
-## Aggregation Summary
+#### Aggregation Summary
 Using the Order date and the newly created season variable to aggregate some data. Mean and Median by Year, standard deviation by season.
 ```{r Summaries}
 # Since dplyr and plyr are invoked together, we need to specify dplyr::group_by and dplyr::summarize. Otherwise, we will get only 1 row of summary.
@@ -134,7 +137,7 @@ sumOrderData
 tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
 ```
 
-## Scatter Plots with Coloring
+#### Scatter Plots with Coloring
 ```{r Scatter}
 scatter <- ggplot(orderTB_copy, aes(x = O_ORDERDATE, y = O_TOTALPRICE)) 
 scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 2002 - 2008", color = "Seasons")
@@ -146,7 +149,7 @@ l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
 l + geom_line() + labs(x = "Year", y = "Average Order Price", title = "Transaction trend from 2002 - 2008", color = "Seasons")
 ```
 
-## Box Plots
+#### Box Plots
 ```{r}
 b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
 b
@@ -157,7 +160,7 @@ b
 ```
 
 <<<<<<< HEAD
-## Aggregation summary
+#### Aggregation summary
 ```{r}
 #I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority?
 table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
@@ -173,8 +176,6 @@ g + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x =
 ```
 A function that finds a customer and how much they have spent with the company and the date range in which they did it.
 ```{r}
-
-##I need to add some logic and verbage when an invalid customer ID is entered
 getTotalperCust<-function(df, variable){
   # if statement and a Stop/error to validate that the customer entered is valid
   if(!(variable%in%df$O_CUSTKEY)){
@@ -185,7 +186,7 @@ getTotalperCust<-function(df, variable){
   minyear<- df %>% filter(O_CUSTKEY == variable) %>% summarise(miny<-min(Year))
   maxyear<- df %>% filter(O_CUSTKEY == variable) %>% summarise(maxy<-max(Year))
   
-  return(list(TotalMoneySpent = paste("Customer", variable, "has spent", tot, "between", minyear, "and", maxyear, ".")))
+  return(list(TotalMoneySpent = paste0("Customer ", variable, " has spent $", tot, " between ", minyear, " and ", maxyear, ".")))
 }
 getTotalperCust(orderTB_copy, 1369)
 ```
