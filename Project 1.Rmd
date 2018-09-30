@@ -162,10 +162,11 @@ b + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", titl
 ###i added a facet wrap.  I don't think it helped the graph be any less busy.  Try it both ways and see what we like?! - Mandy
 ```
 
-<<<<<<< HEAD
 #### Aggregation summary
 ```{r}
-#I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority?
+
+#we need to choose one!
+
 table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
 table(orderTB_copy$O_ORDERSTATUS, orderTB_copy$Season )
 
@@ -175,9 +176,10 @@ g<-ggplot(sumOrderData, aes(x= Year, y = medianPrice))
 
 g + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
 
-
 ```
-A function that finds a customer and how much they have spent with the company and the date range in which they did it.
+
+####Create a custom function
+We created a function that calculates how much money a specific customer has spent with the company and the date range in which this occured.
 ```{r}
 getTotalperCust<-function(df, variable){
   # if statement and a Stop/error to validate that the customer entered is valid
@@ -191,7 +193,7 @@ getTotalperCust<-function(df, variable){
   
   return(list(TotalMoneySpent = paste0("Customer ", variable, " has spent $", tot, " between ", minyear, " and ", maxyear, ".")))
 }
-getTotalperCust(orderTB_copy, 1369)
+getTotalperCust(orderTB_copy, 730)
 ```
 
 =======
