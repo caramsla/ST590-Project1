@@ -1,8 +1,11 @@
 ---
 title: "Project 1 Order Data Analysis"
-author: "Amanda, adil & Brian"
+author: "Amanda, Adil & Brian"
 date: "September 29, 2018"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_depth: 0
 ---
 
 ```{r setup, include=FALSE}
@@ -26,6 +29,9 @@ XML is useful in data transfer. Attempting to share or exchange data in incompat
 ## Why is it a good way to store data?
 XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time. 
 
+## What package(s) should be used to read in XML data?
+There are several ways and packages that could be used to read in XML data.  The 'XML' package has many online tutorials, help, and trouble shooting available.  This, along with the fact that it contains many functions that make it easy to access and convert your data make it our recommendation on reading in XML data.
+
 ## Loading libraries
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
@@ -41,11 +47,11 @@ library(lubridate)
 
 ## Reading in XML Data
 
-We found a website with many public xml datasets, some of them contain very interesting information.<br>
+We found a website with many public XML datasets, some of them contain very interesting information.<br>
 [XML data repository](http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)<br>
-Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources. The data is made public and able to download from washington.edu datasets repository online.<br>
+Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources. The data is made public and able to download from Washington.edu datasets repository online.<br>
 
-However,Mondial has inconsistent number of nodes and/or subnodes throughout the XML content structure. It seems that we can't use standard protocols to fix those. We need to do some ad hoc commands to make that work. As a result we are switching to another more structured dataset called orders from the same repository, which we had success transforming the XML. See code below. We commneted out the lines for Mondial in case we stil want to challenge ourselves later.
+However,Mondial has inconsistent number of nodes and/or subnodes throughout the XML content structure. It seems that we can't use standard protocols to fix those. We need to do some ad hoc commands to make that work. As a result we are switching to another more structured dataset called orders from the same repository, which we had success transforming the XML. See code below. We commented out the lines for Mondial in case we still want to challenge ourselves later.
 
 ```{r Mondial}
 # mondialParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml", useInternalNodes = TRUE)
@@ -104,6 +110,7 @@ Create a variable to indicate which season the order was made. Use definition of
 
 m <- month(orderTB_copy$O_ORDERDATE)
 
+
 # Use ifelse for vectorized operation
 Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", ifelse(m >= 9 & m <= 11, "Autumn", "Winter")))
 
@@ -114,7 +121,7 @@ orderTB_copy$Year <- as.integer(year(orderTB_copy$O_ORDERDATE))
 ```
 
 ## Aggregation Summary
-Using the Order date and the newly created season varible to aggregate some data. Mean and Median by Year, standard deviation by season.
+Using the Order date and the newly created season variable to aggregate some data. Mean and Median by Year, standard deviation by season.
 ```{r Summaries}
 # Since dplyr and plyr are invoked together, we need to specify dplyr::group_by and dplyr::summarize. Otherwise, we will get only 1 row of summary.
 sumOrderData <- orderTB_copy %>% dplyr::group_by(Year, Season) %>% dplyr::summarize(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
@@ -136,7 +143,7 @@ bar + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts", 
 scatter <- ggplot(orderTB_copy, aes(x = O_ORDERDATE, y = O_TOTALPRICE)) 
 scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 1992 - 1998", color = "Seasons")
 ```
-The above plot is too crowded to see the pattern. Do a line plot using sumary data instead.
+The above plot is too crowded to see the pattern. Do a line plot using summary data instead.
 
 ```{r}
 l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
@@ -159,3 +166,39 @@ b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Sea
 b2
 ```
 
+<<<<<<< HEAD
+## Aggregation summary
+```{r}
+#I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority?
+table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
+table(orderTB_copy$O_ORDERSTATUS, orderTB_copy$Season )
+
+#Bar chart of median order price by year and season
+
+g<-ggplot(sumOrderData, aes(x= Year, y = medianPrice))
+
+g + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
+
+
+```
+A function that finds a customer and how much they have spent with the company and the date range in which they did it.
+```{r}
+
+##I need to add some logic and verbage when an invalid customer ID is entered
+getTotalperCust<-function(df, variable){
+  # if statement and a Stop/error to validate that the customer entered is valid
+  if(!(variable%in%df$O_CUSTKEY)){
+    stop("Customer does not exist,please try with a valid customerKey")
+  }
+  
+  tot<- df %>% filter(O_CUSTKEY == variable) %>% dplyr::summarise(totPercust = sum(O_TOTALPRICE))
+  minyear<- df %>% filter(O_CUSTKEY == variable) %>% summarise(miny<-min(Year))
+  maxyear<- df %>% filter(O_CUSTKEY == variable) %>% summarise(maxy<-max(Year))
+  
+  return(list(TotalMoneySpent = paste("Customer", variable, "has spent", tot, "between", minyear, "and", maxyear, ".")))
+}
+getTotalperCust(orderTB_copy, 1369)
+```
+
+=======
+>>>>>>> 8aac0ee1e3209d3e64603f07bfe42b06d2df5ce7
