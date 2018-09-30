@@ -124,25 +124,38 @@ sumOrderData
 tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
 ```
 
+## Bar Plot
+```{r}
+bar <- ggplot(orderTB_copy, aes(x = Year))
+bar + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts", title = "Transaction Record from 1992 - 1998")
+```
+
+
 ## Scatter Plots with Coloring
 ```{r Scatter}
 scatter <- ggplot(orderTB_copy, aes(x = O_ORDERDATE, y = O_TOTALPRICE)) 
-scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 2002 - 2008", color = "Seasons")
+scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 1992 - 1998", color = "Seasons")
 ```
 The above plot is too crowded to see the pattern. Do a line plot using sumary data instead.
 
 ```{r}
 l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
-l + geom_line() + labs(x = "Year", y = "Average Order Price", title = "Transaction trend from 2002 - 2008", color = "Seasons")
+l + geom_line(lwd = 1.2) + labs(x = "Year", y = "Average Order Price", title = "Transaction trend from 2002 - 2008", color = "Seasons")
+```
+
+## Scatter Plot by Month
+```{r}
+scatter2 <- ggplot(orderTB_copy, aes(x = month(O_ORDERDATE), y = O_TOTALPRICE)) 
+scatter2 + geom_point(aes(col = Season)) + facet_wrap(~ Year) + labs(x = "Month", y = "Total Order Price per Customer", color = "Seasons")
 ```
 
 ## Box Plots
 ```{r}
-b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
-b
+b1 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
+b1
 ```
 ```{r}
-b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
-b
+b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
+b2
 ```
 
