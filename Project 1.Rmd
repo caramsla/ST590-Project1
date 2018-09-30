@@ -11,6 +11,9 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
+
+#XML <br>
+
 ## What is XML?
 Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br> 
 
