@@ -141,8 +141,10 @@ tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
 ```{r Scatter}
 scatter <- ggplot(orderTB_copy, aes(x = O_ORDERDATE, y = O_TOTALPRICE)) 
 scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 2002 - 2008", color = "Seasons")
+
+#This plot is too dense to gain valuable insight.  We will try a line plot with a summary measure to see if we can more easily identify trends.
 ```
-The above plot is too crowded to see the pattern. Do a line plot using summary data instead.
+
 
 ```{r}
 l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
@@ -155,8 +157,9 @@ b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_bo
 b
 ```
 ```{r}
-b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
-b
+b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  
+b + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season") + facet_wrap(~Year, ncol = 3, scale = "free")
+###i added a facet wrap.  I don't think it helped the graph be any less busy.  Try it both ways and see what we like?! - Mandy
 ```
 
 <<<<<<< HEAD
