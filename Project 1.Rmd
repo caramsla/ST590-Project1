@@ -110,7 +110,6 @@ Create a variable to indicate which season the order was made. Use definition of
 
 m <- month(orderTB_copy$O_ORDERDATE)
 
-
 # Use ifelse for vectorized operation
 Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", ifelse(m >= 9 & m <= 11, "Autumn", "Winter")))
 
@@ -118,6 +117,8 @@ Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", if
 orderTB_copy$Season <- factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter"))
 orderTB_copy$Year <- as.integer(year(orderTB_copy$O_ORDERDATE))
 
+# Reorder O_Order.Priority
+orderTB_copy$O_ORDER.PRIORITY <- ordered(orderTB_copy$O_ORDER.PRIORITY, levels = c("5-LOW","4-NOT SPECIFIED", "3-MEDIUM", "2-HIGH", "1-URGENT"))
 ```
 
 ## Aggregation Summary
@@ -131,12 +132,16 @@ sumOrderData
 tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
 ```
 
-## Bar Plot
+## Bar Plots
 ```{r}
-bar <- ggplot(orderTB_copy, aes(x = Year))
-bar + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts", title = "Transaction Record from 1992 - 1998")
-```
+# Bar chart of transcation count by year and season
+bar1 <- ggplot(orderTB_copy, aes(x = Year))
+bar1 + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts", title = "Transaction Record from 1992 - 1998")
 
+# Bar chart of median order price by year and season
+bar2 <- ggplot(sumOrderData, aes(x= Year, y = medianPrice))
+bar2 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
+```
 
 ## Scatter Plots with Coloring
 ```{r Scatter}
@@ -145,46 +150,34 @@ scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Pric
 ```
 The above plot is too crowded to see the pattern. Do a line plot using summary data instead.
 
-```{r}
+```{r Line}
 l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
 l + geom_line(lwd = 1.2) + labs(x = "Year", y = "Average Order Price", title = "Transaction trend from 2002 - 2008", color = "Seasons")
 ```
 
-## Scatter Plot by Month
-```{r}
-scatter2 <- ggplot(orderTB_copy, aes(x = month(O_ORDERDATE), y = O_TOTALPRICE)) 
-scatter2 + geom_point(aes(col = Season)) + facet_wrap(~ Year) + labs(x = "Month", y = "Total Order Price per Customer", color = "Seasons")
-```
-
 ## Box Plots
-```{r}
+```{r Box1}
 b1 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
 b1
 ```
-```{r}
+```{r Box2}
 b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
 b2
 ```
 
-<<<<<<< HEAD
-## Aggregation summary
-```{r}
-#I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority?
+## Frequency count tables for other categorical variables
+```{r Frequency}
+#I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority? 
+# B: I think we can keep these as table() functions are good at showing frequency counts (like proc freq in SAS). This gives a different flavor from the dplyr::groupby and dplyr::summarise, which are used to calculate other aggregates.
+
 table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
 table(orderTB_copy$O_ORDERSTATUS, orderTB_copy$Season )
-
-#Bar chart of median order price by year and season
-
-g<-ggplot(sumOrderData, aes(x= Year, y = medianPrice))
-
-g + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
-
-
 ```
-A function that finds a customer and how much they have spent with the company and the date range in which they did it.
-```{r}
 
-##I need to add some logic and verbage when an invalid customer ID is entered
+## Custom Function
+A function that finds a customer and how much they have spent with the company and the date range in which they did it.
+```{r custom}
+# I need to add some logic and verbage when an invalid customer ID is entered
 getTotalperCust<-function(df, variable){
   # if statement and a Stop/error to validate that the customer entered is valid
   if(!(variable%in%df$O_CUSTKEY)){
@@ -197,8 +190,6 @@ getTotalperCust<-function(df, variable){
   
   return(list(TotalMoneySpent = paste("Customer", variable, "has spent", tot, "between", minyear, "and", maxyear, ".")))
 }
+
 getTotalperCust(orderTB_copy, 1369)
 ```
-
-=======
->>>>>>> 8aac0ee1e3209d3e64603f07bfe42b06d2df5ce7
