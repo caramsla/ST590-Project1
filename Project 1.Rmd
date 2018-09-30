@@ -39,28 +39,25 @@ library(lubridate)
 ```
 
 
-## Reading in XML data
+## Reading in XML Data
 
 We found a website with many public xml datasets, some of them contain very interesting information.<br>
 [XML data repository](http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/www/repository.html)<br>
 Mondial is an XML dataset from World geographic database integrated from the CIA World Factbook, the International Atlas, and the TERRA database among other sources. The data is made public and able to download from washington.edu datasets repository online.<br>
 
-Adil / Amanda, the XML dataset of Mondial has inconsistent number of nodes and/or subnodes throughout the XML content structure. It seems that we can't use standard protocols to fix those. We need to some ad hoc commands to make that work. Since this is for practice anyway, I suggest switching to another easier dataset called orders from the same repository, which I had success transforming it into XML. See code below. I commneted out the lines for Mondial in case we stil want to challenge ourselves later.
+However,Mondial has inconsistent number of nodes and/or subnodes throughout the XML content structure. It seems that we can't use standard protocols to fix those. We need to do some ad hoc commands to make that work. As a result we are switching to another more structured dataset called orders from the same repository, which we had success transforming the XML. See code below. We commneted out the lines for Mondial in case we stil want to challenge ourselves later.
 
 ```{r Mondial}
-
 # mondialParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/mondial/mondial-3.0.xml", useInternalNodes = TRUE)
 # class(mondialParse)
 # mondialParse
 
 orderParse <- xmlParse("http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/tpc-h/orders.xml")
 class(orderParse)
-
 ```
 
-## Transforming XML into a dataframe
+## Transforming XML into a Dataframe
 ```{r xmlToDF}
-
 # xmlInList <- xmlToList(mondialParse)
 # monialDF <- ldply(xmlInList, data.frame)
 # Can't use the above methodology because number of nodes and subnodes are not consistent throughout the entire XML structure.
@@ -72,15 +69,15 @@ xmlInList <- xmlToList(orderParse)
 orderDF <- ldply(xmlInList, data.frame)
 orderTB <- tbl_df(orderDF)
 str(orderTB)
-
 ```
 The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> 
 <https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/><br>
 
 ## Data Wrangling
 All columns of data are parsed into factors, so we need to convert them to characters or numeric before manipulating them.
-```{r data_conversion}
-# Make a copy so that orderTB is intact
+```{r Conversions}
+# Remove the last attr row (with NAs) from XML and make a copy so that orderTB is intact
+orderTB <- orderTB[-15001,]
 orderTB_copy <- orderTB
 
 # start converting columns
@@ -99,28 +96,53 @@ class(parsedDate)
 orderTB_copy$O_ORDERDATE <- parsedDate
 
 str(orderTB_copy)
-
 ```
 
 ## Variable Creation
 Create a variable to indicate which season the order was made. Use definition of seasons from northern hemisphere.
-```{r variable_creation}
+```{r Creation}
 
 m <- month(orderTB_copy$O_ORDERDATE)
 
 # Use ifelse for vectorized operation
 Season <- ifelse(m >= 3 & m <= 5, "Spring", ifelse(m >= 6 & m <= 8, "Summer", ifelse(m >= 9 & m <= 11, "Autumn", "Winter")))
-orderTB_copy$Season <- factor(Season)
-orderTB_copy$Year <- year(orderTB_copy$O_ORDERDATE)
+
+# Convert Season into a factor with defined levels (so that the seasons are sorted properly in the aggregation)
+orderTB_copy$Season <- factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter"))
+orderTB_copy$Year <- as.integer(year(orderTB_copy$O_ORDERDATE))
 
 ```
 
-## Aggregation summary
+## Aggregation Summary
+Using the Order date and the newly created season varible to aggregate some data. Mean and Median by Year, standard deviation by season.
+```{r Summaries}
+# Since dplyr and plyr are invoked together, we need to specify dplyr::group_by and dplyr::summarize. Otherwise, we will get only 1 row of summary.
+sumOrderData <- orderTB_copy %>% dplyr::group_by(Year, Season) %>% dplyr::summarize(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
+sumOrderData
+
+# Looking at standard deviation by season using tapply.
+tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
+```
+
+## Scatter Plots with Coloring
+```{r Scatter}
+scatter <- ggplot(orderTB_copy, aes(x = O_ORDERDATE, y = O_TOTALPRICE)) 
+scatter + geom_point(aes(col = Season)) + labs(x = "Date", y = "Total Order Price per Customer", title = "Transaction Record from 2002 - 2008", color = "Seasons")
+```
+The above plot is too crowded to see the pattern. Do a line plot using sumary data instead.
+
 ```{r}
+l <- ggplot(sumOrderData, aes(x = Year, y = meanPrice, color = Season))
+l + geom_line() + labs(x = "Year", y = "Average Order Price", title = "Transaction trend from 2002 - 2008", color = "Seasons")
+```
 
-# Since plyr and dplyr are called together, we must use dplyr::group_by and dplyr::summarise. Otherwise, only a one line summary will be returned. Very important to notice!
-
-order_summary <- orderTB_copy %>% dplyr::group_by(Year) %>% dplyr::summarise(averagePrice = mean(O_TOTALPRICE, na.rm = TRUE), minPrice = min(O_TOTALPRICE, na.rm = TRUE), maxPrice = max(O_TOTALPRICE, na.rm = TRUE), PriceSD = sd(O_TOTALPRICE, na.rm = TRUE))
-order_summary
+## Box Plots
+```{r}
+b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
+b
+```
+```{r}
+b <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
+b
 ```
 
