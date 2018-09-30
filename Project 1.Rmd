@@ -1,6 +1,6 @@
 ---
 title: "Project 1 Order Data Analysis"
-author: "Amanda, adil & Brian"
+author: "Amanda, Adil & Brian"
 date: "September 29, 2018"
 output: 
   html_document:
