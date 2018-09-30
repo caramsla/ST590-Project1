@@ -143,22 +143,22 @@ $(document).ready(function () {
 <p>Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML. XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br></p>
 <p>XML is self-defining, meaning the structure of data is embedded within the data itself. This feature removes the need to pre-build the structure to store the data when attempting to share it.<br></p>
 <p>The main advantage of XML is its simplicity. It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information. This feature facilitates the rendering of such data in the website environment.<br></p>
-<p>You can learn more about XML here:<br> <a href="https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language" class="uri">https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language</a>,<br> <a href="https://www.w3schools.com/xml/xml_whatis.asp" class="uri">https://www.w3schools.com/xml/xml_whatis.asp</a><br> <a href="https://www.sitepoint.com/really-good-introduction-xml/" class="uri">https://www.sitepoint.com/really-good-introduction-xml/</a><br></p>
 </div>
-<div id="where-does-it-get-used" class="section level4">
-<h4>Where does it get used?</h4>
+<div id="where-is-it-used" class="section level4">
+<h4>Where is it used?</h4>
 <p>XML is useful in data transfer. Attempting to share or exchange data in incompatible formats is time consuming at best. As XML stores data in a plain text format, it is a platform independent way of storing and transporting data.</p>
 </div>
 <div id="why-is-it-a-good-way-to-store-data" class="section level4">
 <h4>Why is it a good way to store data?</h4>
 <p>XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time.</p>
+<p>You can learn more about XML here:<br> <a href="https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language" class="uri">https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language</a>,<br> <a href="https://www.w3schools.com/xml/xml_whatis.asp" class="uri">https://www.w3schools.com/xml/xml_whatis.asp</a><br> <a href="https://www.sitepoint.com/really-good-introduction-xml/" class="uri">https://www.sitepoint.com/really-good-introduction-xml/</a><br></p>
 </div>
 </div>
 <div id="package-to-read-in-xml-data" class="section level1">
 <h1>Package to read in XML data</h1>
 <div id="what-packages-should-be-used-to-read-in-xml-data" class="section level4">
 <h4>What package(s) should be used to read in XML data?</h4>
-<p>There are several ways and packages that could be used to read in XML data. The ‘XML’ package has many online tutorials, help, and trouble shooting available. This, along with the fact that it contains many functions that make it easy to access and convert your data make it our recommendation on reading in XML data.</p>
+<p>There are several ways and packages that could be used to read in XML data. The ‘XML’ package has many online tutorials, help, and trouble shooting available. This, along with the fact that it contains many functions that make it easy to access and convert your data making it our recommendation for reading in XML data.</p>
 </div>
 </div>
 <div id="reading-in-data-and-performing-some-sample-analysis" class="section level1">
@@ -211,7 +211,7 @@ str(orderTB)</code></pre>
 ##  $ O_SHIP.PRIORITY : Factor w/ 1 level &quot;0&quot;: 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ O_COMMENT       : Factor w/ 14919 levels &quot;blithely final dolphins solve-- blithely blithe packages nag blith&quot;,..: 1 2 3 4 5 6 7 8 9 10 ...
 ##  $ X..i..          : Factor w/ 1 level &quot;orders&quot;: NA NA NA NA NA NA NA NA NA NA ...</code></pre>
-<p>The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> <a href="https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/" class="uri">https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/</a><br></p>
+<p>The two quantitative variables are total price and the full order date. The two categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> <a href="https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/" class="uri">https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/</a><br></p>
 </div>
 <div id="data-wrangling" class="section level4">
 <h4>Data Wrangling</h4>
@@ -251,7 +251,7 @@ str(orderTB_copy)</code></pre>
 </div>
 <div id="variable-creation" class="section level4">
 <h4>Variable Creation</h4>
-<p>Create a variable to indicate which season the order was made. Use definition of seasons from northern hemisphere.</p>
+<p>Create a variable to indicate which season the order was made. Use the definition of seasons from the northern hemisphere.</p>
 <pre class="r"><code>m &lt;- month(orderTB_copy$O_ORDERDATE)
 
 
@@ -264,7 +264,7 @@ orderTB_copy$Year &lt;- as.integer(year(orderTB_copy$O_ORDERDATE))</code></pre>
 </div>
 <div id="aggregation-summary" class="section level4">
 <h4>Aggregation Summary</h4>
-<p>Using the Order date and the newly created season variable to aggregate some data. Mean and Median by Year, standard deviation by season.</p>
+<p>Use the order date and the newly created season variable to aggregate some data; mean and median by year, and standard deviation by season.</p>
 <pre class="r"><code># Since dplyr and plyr are invoked together, we need to specify dplyr::group_by and dplyr::summarize. Otherwise, we will get only 1 row of summary.
 sumOrderData &lt;- orderTB_copy %&gt;% dplyr::group_by(Year, Season) %&gt;% dplyr::summarize(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
 sumOrderData</code></pre>

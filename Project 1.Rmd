@@ -21,20 +21,20 @@ XML is self-defining, meaning the structure of data is embedded within the data 
 
 The main advantage of XML is its simplicity. It enables you to consolidate large chunks of information into an XML document which provides structure and organization to the information. This feature facilitates the rendering of such data in the website environment.<br>
 
-You can learn more about XML here:<br>
-<https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language>,<br>
-<https://www.w3schools.com/xml/xml_whatis.asp><br>
-<https://www.sitepoint.com/really-good-introduction-xml/><br>
-
-#### Where does it get used? 
+#### Where is it used? 
 XML is useful in data transfer. Attempting to share or exchange data in incompatible formats is time consuming at best. As XML stores data in a plain text format, it is a platform independent way of storing and transporting data.
 
 #### Why is it a good way to store data?
 XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time. 
 
+You can learn more about XML here:<br>
+<https://searchmicroservices.techtarget.com/definition/XML-Extensible-Markup-Language>,<br>
+<https://www.w3schools.com/xml/xml_whatis.asp><br>
+<https://www.sitepoint.com/really-good-introduction-xml/><br>
+
 # Package to read in XML data
 ####What package(s) should be used to read in XML data?
-There are several ways and packages that could be used to read in XML data.  The 'XML' package has many online tutorials, help, and trouble shooting available.  This, along with the fact that it contains many functions that make it easy to access and convert your data make it our recommendation on reading in XML data.
+There are several ways and packages that could be used to read in XML data.  The 'XML' package has many online tutorials, help, and trouble shooting available.  This, along with the fact that it contains many functions that make it easy to access and convert your data making it our recommendation for reading in XML data.
 
 # Reading in data and performing some sample analysis
 
@@ -82,7 +82,7 @@ orderDF <- ldply(xmlInList, data.frame)
 orderTB <- tbl_df(orderDF)
 str(orderTB)
 ```
-The 2 quantitative variables are total price and the full order date. The 2 categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> 
+The two quantitative variables are total price and the full order date. The two categorical variables we are going to explore are order priority and order status. For a concise breakdown between quantitative vs categorical variables, please refer to:<br> 
 <https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/tables/supporting-topics/basics/categorical-and-quantitative-variables/><br>
 
 #### Data Wrangling
@@ -111,7 +111,7 @@ str(orderTB_copy)
 ```
 
 #### Variable Creation
-Create a variable to indicate which season the order was made. Use definition of seasons from northern hemisphere.
+Create a variable to indicate which season the order was made. Use the definition of seasons from the northern hemisphere.
 ```{r Creation}
 
 m <- month(orderTB_copy$O_ORDERDATE)
@@ -127,7 +127,7 @@ orderTB_copy$Year <- as.integer(year(orderTB_copy$O_ORDERDATE))
 ```
 
 #### Aggregation Summary
-Using the Order date and the newly created season variable to aggregate some data. Mean and Median by Year, standard deviation by season.
+Use the order date and the newly created season variable to aggregate some data; mean and median by year, and standard deviation by season.
 ```{r Summaries}
 # Since dplyr and plyr are invoked together, we need to specify dplyr::group_by and dplyr::summarize. Otherwise, we will get only 1 row of summary.
 sumOrderData <- orderTB_copy %>% dplyr::group_by(Year, Season) %>% dplyr::summarize(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
