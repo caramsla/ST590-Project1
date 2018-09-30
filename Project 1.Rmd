@@ -29,7 +29,7 @@ XML is useful in data transfer. Attempting to share or exchange data in incompat
 ## Why is it a good way to store data?
 XML is a good way to store complex and highly variable data, hierarchical data, and data in which the the format may change over time. 
 
-##What package(s) should be used to read in XML data?
+## What package(s) should be used to read in XML data?
 There are several ways and packages that could be used to read in XML data.  The 'XML' package has many online tutorials, help, and trouble shooting available.  This, along with the fact that it contains many functions that make it easy to access and convert your data make it our recommendation on reading in XML data.
 
 ## Loading libraries
@@ -168,7 +168,7 @@ g + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x =
 
 
 ```
-A function that finds a customer and how much they have spent and what years they were customers
+A function that finds a customer and how much they have spent with the company and the date range in which they did it.
 ```{r}
 
 ##I need to add some logic and verbage when an invalid customer ID is entered
