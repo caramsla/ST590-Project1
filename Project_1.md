@@ -11,7 +11,7 @@ output:
 
 
 
-#XML: What is it and why should we use it? <br>
+# XML: What is it and why should we use it? <br>
 
 #### What is XML?
 Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br> 
@@ -32,7 +32,7 @@ You can learn more about XML here:<br>
 <https://www.sitepoint.com/really-good-introduction-xml/><br>
 
 # Package to read in XML data
-####What package(s) should be used to read in XML data?
+#### What package(s) should be used to read in XML data?
 There are several ways and packages that could be used to read in XML data. The 'XML' package has many online tutorials, help, and trouble shooting resources available. This, along with the fact that it contains many functions that make it easy to access and convert your data make it our recommendation for reading in XML data.
 
 # Reading in data and performing some sample analysis
@@ -274,7 +274,7 @@ l + geom_line(lwd = 1.2) + labs(x = "Year", y = "Average Order Price", title = "
 
 ![](Project_1_files/figure-html/Line-1.png)<!-- -->
 
-####Box Plots
+#### Box Plots
 
 ```r
 b1 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE))  + geom_boxplot(fill = "pink") + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by year")
@@ -315,7 +315,7 @@ table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
 ##   1-URGENT           792    740    706    782
 ```
 
-####Create a custom function
+#### Create a custom function
 We created a function that calculates how much money a specific customer has spent with the company and the date range in which this occured.
 
 ```r
