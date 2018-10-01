@@ -149,10 +149,6 @@ sumOrderData2
 bar1 <- ggplot(orderTB_copy, aes(x = Year))
 bar1 + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts", title = "Transaction Record from 1992 - 1998")
 
-# Bar chart of median order price by year and season
-bar2 <- ggplot(sumOrderData, aes(x= Year, y = medianPrice))
-bar2 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
-
 # Bar chart of median order price by order status and season
 bar3 <- ggplot(sumOrderData2, aes(x= O_ORDERSTATUS, y = medianPrice))
 bar3 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Order Status", y = "Median Order Price", title = "Bar Chart of Median Order Price by Order Status and Season")

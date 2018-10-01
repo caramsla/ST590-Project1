@@ -245,20 +245,12 @@ bar1 + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts",
 ![](Project_1_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 ```r
-# Bar chart of median order price by year and season
-bar2 <- ggplot(sumOrderData, aes(x= Year, y = medianPrice))
-bar2 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
-```
-
-![](Project_1_files/figure-html/unnamed-chunk-2-2.png)<!-- -->
-
-```r
 # Bar chart of median order price by order status and season
 bar3 <- ggplot(sumOrderData2, aes(x= O_ORDERSTATUS, y = medianPrice))
 bar3 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Order Status", y = "Median Order Price", title = "Bar Chart of Median Order Price by Order Status and Season")
 ```
 
-![](Project_1_files/figure-html/unnamed-chunk-2-3.png)<!-- -->
+![](Project_1_files/figure-html/unnamed-chunk-2-2.png)<!-- -->
 
 #### Scatter Plots with Coloring
 
