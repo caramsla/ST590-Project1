@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
-#XML: What is is and why should we use it? <br>
+#XML: What is it and why should we use it? <br>
 
 #### What is XML?
 Extensible Markup Language, or XML, is a dynamic language that is similar to, but more flexible than HTML.  XML simplifies data sharing as it provides a flexible way to create information formats and electronically share structured data via the internet or corporate networks.<br> 
@@ -214,7 +214,11 @@ getTotalperCust<-function(df, variable){
   
   return(list(TotalMoneySpent = paste0("Customer ", variable, " has spent $", tot, " between ", minyear, " and ", maxyear, ".")))
 }
+# Checking how many observations the data set has for Cusomer number 1
+customerNum1 <- filter(orderTB_copy, O_CUSTKEY == 1)
+customerNum1 # 9 Observations
 
+getTotalperCust(orderTB_copy, 1)
 getTotalperCust(orderTB_copy, 1369)
 getTotalperCust(orderTB_copy, 730)
 ```
