@@ -4,6 +4,7 @@ author: "Amanda, Adil & Brian"
 date: "September 29, 2018"
 output: 
   html_document:
+    keep_md: TRUE
     toc: true
     toc_depth: 1
 ---
@@ -128,14 +129,18 @@ orderTB_copy$O_ORDER.PRIORITY <- ordered(orderTB_copy$O_ORDER.PRIORITY, levels =
 ```
 
 #### Aggregation Summary
-Use the order date and the newly created season variable to aggregate some data; mean and median by year, and standard deviation by season.
+Use the order date and the newly created season variable to aggregate some data; mean and median by year/season, and standard deviation by season.
 ```{r Summaries}
 # Since dplyr and plyr are invoked together, we need to specify dplyr::group_by and dplyr::summarize. Otherwise, we will get only 1 row of summary.
 sumOrderData <- orderTB_copy %>% dplyr::group_by(Year, Season) %>% dplyr::summarize(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
 sumOrderData
 
-# Looking at standard deviation by season using tapply.
+# Looking at standard deviation by season using tapply from base package.
 tapply(X=orderTB_copy$O_TOTALPRICE, INDEX = orderTB_copy$Season, FUN = sd)
+
+# In addition to Year/season, we try to summarise by order status/season.
+sumOrderData2 <- orderTB_copy %>% dplyr::group_by(O_ORDERSTATUS, Season) %>% dplyr::mutate(meanPrice = mean(O_TOTALPRICE, na.rm = TRUE), medianPrice = median(O_TOTALPRICE, na.rm = TRUE), sdPrice = sd(O_TOTALPRICE, na.rm = TRUE))
+sumOrderData2
 ```
 
 #### Bar Plots
@@ -147,6 +152,11 @@ bar1 + geom_bar(aes(fill = Season)) + labs(x = "Year", y = "Transaction Counts",
 # Bar chart of median order price by year and season
 bar2 <- ggplot(sumOrderData, aes(x= Year, y = medianPrice))
 bar2 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Year", y = "Median Order Price per Season", title = "Bar Chart of Median Order Price by Year and Season")
+
+# Bar chart of median order price by order status and season
+bar3 <- ggplot(sumOrderData2, aes(x= O_ORDERSTATUS, y = medianPrice))
+bar3 + geom_bar(aes(fill=Season), stat = "identity", position = "dodge") + labs(x = "Order Status", y = "Median Order Price", title = "Bar Chart of Median Order Price by Order Status and Season")
+
 ```
 
 #### Scatter Plots with Coloring
