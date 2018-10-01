@@ -170,39 +170,29 @@ b1
 ```
 
 ```{r Box2}
-b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season") + facet_wrap(~Year, ncol = 3, scale = "free")
+b2 <- ggplot(orderTB_copy, aes(x = as.factor(Year), y = O_TOTALPRICE, fill = Season))  + geom_boxplot() + labs(x = "Year", y = "Total Order Price per Customer", title = "Boxplot of Total Order Price by Year and Season")
 b2
-
-
-
-table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
 
 #Bar chart of median order price by year and season
 
 g<-ggplot(sumOrderData, aes(x= Year, y = medianPrice))
 
-# I added a facet wrap.  I don't think it helped the graph be any less busy.  Try it both ways and see what we like?! - Mandy
-# B: I think box plots are not that crowded and puting them together enables user to see them holistically and compare year to year. I am fine with either ways.
 ```
 
-<<<<<<< HEAD
+
 #### Frequency count tables for other categorical variables
 ```{r Frequency}
-#I made 2 frequency tables. we can use one of these or a different one.  Should we re-order the factors for o_order.priority? 
-# B: I think we can keep these as table() functions are good at showing frequency counts (like proc freq in SAS). This gives a different flavor from the dplyr::groupby and dplyr::summarise, which are used to calculate other aggregates.
-
+#Frequency table
 table(orderTB_copy$O_ORDER.PRIORITY, orderTB_copy$Season)
-table(orderTB_copy$O_ORDERSTATUS, orderTB_copy$Season )
 ```
-
 
 ####Create a custom function
 We created a function that calculates how much money a specific customer has spent with the company and the date range in which this occured.
-```{r}
+```{r, error=TRUE}
 getTotalperCust<-function(df, variable){
-  # if statement and a Stop/error to validate that the customer entered is valid
+  # if statement and a stop/error to validate that the customer entered is valid
   if(!(variable%in%df$O_CUSTKEY)){
-    stop("Customer does not exist,please try with a valid customerKey")
+    stop("Customer does not exist,please try again with a valid customerKey")
   }
   
   tot<- df %>% filter(O_CUSTKEY == variable) %>% dplyr::summarise(totPercust = sum(O_TOTALPRICE))
@@ -215,7 +205,7 @@ getTotalperCust<-function(df, variable){
 customerNum1 <- filter(orderTB_copy, O_CUSTKEY == 1)
 customerNum1 # 9 Observations
 
-getTotalperCust(orderTB_copy, 1)
+getTotalperCust(orderTB_copy, 1110)
 getTotalperCust(orderTB_copy, 1369)
 getTotalperCust(orderTB_copy, 730)
 ```
