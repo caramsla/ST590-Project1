@@ -218,7 +218,7 @@ getTotalperCust(orderTB_copy, 730)
 
 
 #Group A Signing on...
-```{r echo=FALSE, message=FALSE}
+```{r message=FALSE}
 #We noticed some issues in using a URL with a https epithet so had to load the URL using rCurl and then change the security settings
 
 library(RCurl)
@@ -227,3 +227,11 @@ ajaxFetch<-getURL(ajaxURL)
 ajaxData<-xmlTreeParse(ajaxFetch,useInternal=TRUE)
 ```
 
+Now that we have the data in our environment in raw format, we have to clean it up
+```{r}
+#We have to unlist since we don't have a square matrix
+xmlInList2 <- xmlToList(ajaxData)
+ajaxDF <- ldply(unlist(xmlInList2), data.frame)
+ajaxTB <- tbl_df(ajaxDF)
+```
+Getting there, but now the entire dataset is in a single line so we'll have to figure out how to change the rows into columns but only do so for every 24 rows.  
