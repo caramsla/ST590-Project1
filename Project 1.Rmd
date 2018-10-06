@@ -215,3 +215,15 @@ getTotalperCust(orderTB_copy, 1110)
 getTotalperCust(orderTB_copy, 1369)
 getTotalperCust(orderTB_copy, 730)
 ```
+
+
+#Group A Signing on...
+```{r echo=FALSE, message=FALSE}
+#We noticed some issues in using a URL with a https epithet so had to load the URL using rCurl and then change the security settings
+
+library(RCurl)
+ajaxURL<-"https://www4.stat.ncsu.edu/~post/558/datasets/ajax.xml"
+ajaxFetch<-getURL(ajaxURL)
+ajaxData<-xmlTreeParse(ajaxFetch,useInternal=TRUE)
+```
+
