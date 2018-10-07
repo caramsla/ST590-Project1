@@ -217,7 +217,8 @@ getTotalperCust(orderTB_copy, 730)
 ```
 
 
-#Group A Signing on...
+#By Group-A: second example of reading in XML data set, and do analysis
+## Read in XML data set
 ```{r message=FALSE}
 #We noticed some issues in using a URL with a https epithet so had to load the URL using rCurl and then change the security settings
 
@@ -234,4 +235,15 @@ xmlInList2 <- xmlToList(ajaxData)
 ajaxDF <- ldply(unlist(xmlInList2), data.frame)
 ajaxTB <- tbl_df(ajaxDF)
 ```
-Getting there, but now the entire dataset is in a single line so we'll have to figure out how to change the rows into columns but only do so for every 24 rows.  
+
+Now the entire dataset is in a long form with redundant variable names, so we want to change the values in the id colume into columns names, which means convert the long form dataset into a wide form.
+```{r}
+library(dplyr)
+library(tidyr)
+ajaxTB$X..i..<-as.character(ajaxTB$X..i..)
+ajaxTBwide<-ajaxTB %>% group_by(.id) %>% #group by everything other than the value column
+  dplyr::mutate(row_id=1:n()) %>% # build group index
+  ungroup() %>% spread(key=.id, value=X..i..) %>% # spread
+  select(-row_id)  # drop the index
+```
+
