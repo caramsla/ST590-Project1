@@ -217,7 +217,7 @@ getTotalperCust(orderTB_copy, 730)
 ```
 
 
-#By Group-A: second example of reading in XML data set, and do analysis
+# By Group-A: second example of reading in XML data set, and do analysis
 ## Read in XML data set
 ```{r message=FALSE}
 #We noticed some issues in using a URL with a https epithet so had to load the URL using rCurl and then change the security settings
