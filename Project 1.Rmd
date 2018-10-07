@@ -220,7 +220,7 @@ getTotalperCust(orderTB_copy, 730)
 # By Group-A: second example of reading in XML data set, and do analysis
 ## Read in XML data set
 ```{r message=FALSE}
-#We noticed some issues in using a URL with a https epithet so had to load the URL using rCurl and then change the security settings
+#We noticed some issues in using a URL with an https epithet. We had to load the URL using RCurl and then change the security settings.
 
 library(RCurl)
 ajaxURL<-"https://www4.stat.ncsu.edu/~post/558/datasets/ajax.xml"
@@ -245,5 +245,12 @@ ajaxTBwide<-ajaxTB %>% group_by(.id) %>% #group by everything other than the val
   dplyr::mutate(row_id=1:n()) %>% # build group index
   ungroup() %>% spread(key=.id, value=X..i..) %>% # spread
   select(-row_id)  # drop the index
+
+#Rename variables to get rid of collection.poi beginning portion
+names(ajaxTBwide)<-sub("\\w{10}","",names(ajaxTBwide))
+names(ajaxTBwide)<-sub(".","",names(ajaxTBwide))
+names(ajaxTBwide)<-sub("\\w{3}","",names(ajaxTBwide))
+names(ajaxTBwide)<-sub(".","",names(ajaxTBwide))
 ```
+
 
