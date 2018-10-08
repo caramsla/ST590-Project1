@@ -317,3 +317,16 @@ theme(axis.text.x=element_text(angle=90))
 ```
 
 (Zhen-we may add more summarizations, and plots)
+
+### Create a map of Seller locations in the United States
+```{r}
+library(mapdata)
+usa <- map_data("usa")
+mapdf <- filter(ajaxTBwide, (as.numeric(ajaxTBwide$collection.poi.longitude) > -130) & (as.numeric(ajaxTBwide$collection.poi.longitude) < -65))
+ggplot() + geom_polygon(data = usa, aes(x=long, y = lat, group = group)) + coord_fixed(1.3)
+cariboumap <- ggplot() + 
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = "#008b8b", color = "gray") + 
+  coord_fixed(1.3)
+cariboumap + 
+  geom_point(data = mapdf, aes(x = (as.numeric(mapdf$collection.poi.longitude)), y = (as.numeric(mapdf$collection.poi.latitude))), color = "black", size = 0.5) 
+```
