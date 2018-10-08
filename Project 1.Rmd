@@ -231,6 +231,8 @@ ajaxData<-xmlTreeParse(ajaxFetch,useInternal=TRUE)
 Now that we have the data in our environment in raw format, we have to clean it up
 ```{r cache=TRUE}
 #We have to unlist since we don't have a square matrix
+library(plyr)
+library(dplyr)
 xmlInList2 <- xmlToList(ajaxData)
 ajaxDF <- ldply(unlist(xmlInList2), data.frame)
 ajaxTB <- tbl_df(ajaxDF)
@@ -238,7 +240,6 @@ ajaxTB <- tbl_df(ajaxDF)
 
 Now the entire dataset is in a long form with redundant variable names, so we want to change the values in the id colume into columns names, which means convert the long form dataset into a wide form.
 ```{r cache=TRUE}
-library(dplyr)
 library(tidyr)
 ajaxTB$X..i..<-as.character(ajaxTB$X..i..)
 ajaxTBwide<-ajaxTB %>% group_by(.id) %>% #group by everything other than the value column
@@ -272,13 +273,22 @@ ajaxTBwide$meetingrooms<-as.numeric(ajaxTBwide$meetingrooms)
 ajaxTBwide$wifi<-as.numeric(ajaxTBwide$wifi)
 ```
 
-
-
+## Exploratory data analysis
+(Zhen-When I run this code, there is some error)
 After cleaning up the data a little bit, we will do some sample analysis.
 
-```{r}
 #summaries
 ajaxTBwide%>%group_by(wifi)%>%summarize(grocery,identity)
 
+
+### Numeric Summaries:
+Numeric summary of the proportion of Caribou coffee locations that have wifi for each state.
+```{r}
+wifiPropData<-ajaxTBwide %>% group_by(state) %>% summarise(wifiProp=mean(wifi,na.rm=TRUE))
+```
+
+Numeric summary of the proportion of Caribou coffee locations that have drivethru for each state.
+```{r}
+driveThruPropData<-ajaxTBwide %>% group_by(state) %>% summarise(driveThruProp=mean(drivethru,na.rm=TRUE))
 ```
 
