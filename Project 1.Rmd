@@ -52,6 +52,7 @@ if (!require(dplyr)) {install.packages("dplyr")}
 require(dplyr)
 if (!require(lubridate)) {install.packages("lubridate")}
 library(lubridate)
+library(ggplot2)
 ```
 
 
@@ -223,7 +224,7 @@ getTotalperCust(orderTB_copy, 730)
 # By Group-A: second example of reading in XML data set, and do analysis
 ## Read in XML data set
 ```{r message=FALSE, cache=TRUE}
-#We noticed some issues in using a URL with an https epithet. We had to load the URL using RCurl and then change the security settings.
+#We noticed some issues in using a URL with an https epithet. We had to load the URL using RCurl to change the security settings.
 
 library(RCurl)
 ajaxURL<-"https://www4.stat.ncsu.edu/~post/558/datasets/ajax.xml"
@@ -297,7 +298,6 @@ driveThruPropData<-ajaxTBwide %>% group_by(state) %>% summarise(driveThruProp=me
 ### Create a bar plot:
 Bar plot showing proportion of Caribou coffee locations that have wifi for each state.
 ```{r}
-library(ggplot2)
 p<-ggplot(wifiPropData, aes(x=state, y=wifiProp))
 p+geom_bar(stat="identity", fill="blue")+
 labs(x="States", title="Barplot of proportion of Caribou coffee locations that have wifi for each state")+
