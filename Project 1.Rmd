@@ -303,3 +303,15 @@ ylab("Proportion of wifi covered")+
 theme(axis.text.x=element_text(angle=90))
 ```
 
+
+### Create a scatter plot:
+Scatter plot showing proportion of Caribou coffee locations that have drivethru for each state..
+```{r}
+g<-ggplot(driveThruPropData, aes(x = state, y = driveThruProp))
+g+geom_point()+
+labs(x="States", title="Scatter plot of proportion of Caribou coffee locations that have drivethru for each state")+
+ylab("Proportion of locations that have drivethru")+
+theme(axis.text.x=element_text(angle=90))
+```
+
+(Zhen-we may add more summarizations, and plots)
