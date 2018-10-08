@@ -292,3 +292,14 @@ Numeric summary of the proportion of Caribou coffee locations that have drivethr
 driveThruPropData<-ajaxTBwide %>% group_by(state) %>% summarise(driveThruProp=mean(drivethru,na.rm=TRUE))
 ```
 
+### Create a bar plot:
+Bar plot showing proportion of Caribou coffee locations that have wifi for each state.
+```{r}
+library(ggplot2)
+p<-ggplot(wifiPropData, aes(x=state, y=wifiProp))
+p+geom_bar(stat="identity", fill="blue")+
+labs(x="States", title="Barplot of proportion of Caribou coffee locations that have wifi for each state")+
+ylab("Proportion of wifi covered")+
+theme(axis.text.x=element_text(angle=90))
+```
+
