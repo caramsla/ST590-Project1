@@ -43,10 +43,13 @@ There are several ways and packages that could be used to read in XML data. The 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
 #requiring more packages that will be helpful later to handle XML data
+if (!require(XML)) {install.packages("XML")}
 library(XML)
 library(methods)
-library(plyr)
-library(dplyr)
+if (!require(plyr)) {install.packages("plyr")}
+require(plyr)
+if (!require(dplyr)) {install.packages("dplyr")}
+require(dplyr)
 if (!require(lubridate)) {install.packages("lubridate")}
 library(lubridate)
 ```
@@ -231,8 +234,7 @@ ajaxData<-xmlTreeParse(ajaxFetch,useInternal=TRUE)
 Now that we have the data in our environment in raw format, we have to clean it up
 ```{r cache=TRUE}
 #We have to unlist since we don't have a square matrix
-library(plyr)
-library(dplyr)
+
 xmlInList2 <- xmlToList(ajaxData)
 ajaxDF <- ldply(unlist(xmlInList2), data.frame)
 ajaxTB <- tbl_df(ajaxDF)
@@ -305,7 +307,7 @@ theme(axis.text.x=element_text(angle=90))
 
 
 ### Create a scatter plot:
-Scatter plot showing proportion of Caribou coffee locations that have drivethru for each state..
+Scatter plot showing proportion of Caribou coffee locations that have drivethru for each state...
 ```{r}
 g<-ggplot(driveThruPropData, aes(x = state, y = driveThruProp))
 g+geom_point()+
