@@ -318,7 +318,7 @@ theme(axis.text.x=element_text(angle=90))
 
 (Zhen-we may add more summarizations, and plots)
 
-### Create a map of locations in the United States
+### Create a map of Seller locations in the United States
 ```{r}
 library(mapdata)
 usa <- map_data("usa")
