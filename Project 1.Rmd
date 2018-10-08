@@ -219,7 +219,7 @@ getTotalperCust(orderTB_copy, 730)
 
 # By Group-A: second example of reading in XML data set, and do analysis
 ## Read in XML data set
-```{r message=FALSE}
+```{r message=FALSE, cache=TRUE}
 #We noticed some issues in using a URL with an https epithet. We had to load the URL using RCurl and then change the security settings.
 
 library(RCurl)
@@ -229,7 +229,7 @@ ajaxData<-xmlTreeParse(ajaxFetch,useInternal=TRUE)
 ```
 
 Now that we have the data in our environment in raw format, we have to clean it up
-```{r}
+```{r cache=TRUE}
 #We have to unlist since we don't have a square matrix
 xmlInList2 <- xmlToList(ajaxData)
 ajaxDF <- ldply(unlist(xmlInList2), data.frame)
@@ -237,7 +237,7 @@ ajaxTB <- tbl_df(ajaxDF)
 ```
 
 Now the entire dataset is in a long form with redundant variable names, so we want to change the values in the id colume into columns names, which means convert the long form dataset into a wide form.
-```{r}
+```{r cache=TRUE}
 library(dplyr)
 library(tidyr)
 ajaxTB$X..i..<-as.character(ajaxTB$X..i..)
@@ -245,12 +245,40 @@ ajaxTBwide<-ajaxTB %>% group_by(.id) %>% #group by everything other than the val
   dplyr::mutate(row_id=1:n()) %>% # build group index
   ungroup() %>% spread(key=.id, value=X..i..) %>% # spread
   select(-row_id)  # drop the index
-
-#Rename variables to get rid of collection.poi beginning portion
-names(ajaxTBwide)<-sub("\\w{10}","",names(ajaxTBwide))
-names(ajaxTBwide)<-sub(".","",names(ajaxTBwide))
-names(ajaxTBwide)<-sub("\\w{3}","",names(ajaxTBwide))
-names(ajaxTBwide)<-sub(".","",names(ajaxTBwide))
 ```
 
+```{r}
+#Clunky way to rename variables to get rid of collection.poi beginning portion
+names(ajaxTBwide)<-sub("\\w{10}","",names(ajaxTBwide)) #removes "collection"
+names(ajaxTBwide)<-sub(".","",names(ajaxTBwide)) #removes "." 
+names(ajaxTBwide)<-sub("\\w{3}","",names(ajaxTBwide))  #removes "poi"
+names(ajaxTBwide)<-sub(".","",names(ajaxTBwide)) #removes "."
+
+#Cleans data to change all Y/N variants to 0/1
+ajaxTBwide[ajaxTBwide=="y"]<-1
+ajaxTBwide[ajaxTBwide=="Y"]<-1
+ajaxTBwide[ajaxTBwide=="Yes"]<-1
+ajaxTBwide[ajaxTBwide=="n"]<-0
+ajaxTBwide[ajaxTBwide=="N"]<-0
+ajaxTBwide[ajaxTBwide=="No"]<-0
+
+#Changes variables from chr to numeric for mean calculations for the 0/1 variables
+ajaxTBwide$brueggers<-as.numeric(ajaxTBwide$brueggers)
+ajaxTBwide$coffeeshop<-as.numeric(ajaxTBwide$coffeeshop)
+ajaxTBwide$drivethru<-as.numeric(ajaxTBwide$drivethru)
+ajaxTBwide$hide_employment<-as.numeric(ajaxTBwide$hide_employment)
+ajaxTBwide$loyalty<-as.numeric(ajaxTBwide$loyalty)
+ajaxTBwide$meetingrooms<-as.numeric(ajaxTBwide$meetingrooms)
+ajaxTBwide$wifi<-as.numeric(ajaxTBwide$wifi)
+```
+
+
+
+After cleaning up the data a little bit, we will do some sample analysis.
+
+```{r}
+#summaries
+ajaxTBwide%>%group_by(wifi)%>%summarize(grocery,identity)
+
+```
 
